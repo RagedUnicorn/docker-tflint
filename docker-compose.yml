@@ -1,0 +1,24 @@
+# Docker Compose configuration for running TFLint
+#
+# Usage:
+#   docker compose run --rm tflint --init        # install configured plugins
+#   docker compose run --rm tflint               # lint the working directory
+#   docker compose run --rm tflint --chdir=/workspace
+#   docker compose run --rm tflint --help
+
+services:
+  tflint:
+    image: ragedunicorn/tflint:${TFLINT_VERSION:-latest}
+    container_name: tflint
+    # Match the host user so files TFLint writes to the bind mount
+    # (the .tflint.d plugin cache, if mounted here) stay owned by you.
+    # Export UID/GID or set them in .env to override the 1000:1000 default.
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      # The code to lint. Read-only is fine: TFLint does not modify your config.
+      - ./:/workspace:ro
+    working_dir: /workspace
+    environment:
+      - TERM=xterm-256color
+    tty: true
+    init: true

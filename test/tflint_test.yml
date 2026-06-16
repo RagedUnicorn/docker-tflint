@@ -1,0 +1,33 @@
+schemaVersion: 2.0.0
+
+fileExistenceTests:
+  - name: 'TFLint binary exists'
+    path: '/usr/local/bin/tflint'
+    shouldExist: true
+    permissions: '-rwxr-xr-x'
+
+  - name: 'Workspace directory exists'
+    path: '/workspace'
+    shouldExist: true
+    permissions: 'drwxr-xr-x'
+
+  - name: 'CA certificates for plugin-registry HTTPS'
+    path: '/etc/ssl/certs/ca-certificates.crt'
+    shouldExist: true
+
+fileContentTests:
+  - name: 'CA certificates installed'
+    path: '/etc/ssl/certs/ca-certificates.crt'
+    expectedContents: ['-----BEGIN CERTIFICATE-----']
+
+commandTests:
+  - name: 'TFLint is executable'
+    command: 'tflint'
+    args: ['--version']
+    exitCode: 0
+
+  - name: 'Working directory is set correctly'
+    command: 'pwd'
+    exitCode: 0
+    expectedOutput:
+      - '/workspace'

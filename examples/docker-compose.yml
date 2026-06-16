@@ -1,0 +1,39 @@
+# Docker Compose example for a real TFLint workflow
+#
+# Demonstrates the runtime concerns that matter for TFLint specifically:
+#   - a read-only working directory (TFLint never modifies your config)
+#   - host UID/GID matching so any files written stay owned by you
+#   - a persistent plugin cache so `tflint --init` plugins survive across runs
+#
+# Usage:
+#   # Lint the example directory (bundled terraform ruleset, fully offline)
+#   docker compose -f examples/docker-compose.yml run --rm tflint
+#
+#   # If you add external plugins (aws/google/azurerm) to .tflint.hcl, install
+#   # them once first (needs network + a writable plugin cache - see below):
+#   docker compose -f examples/docker-compose.yml run --rm tflint --init
+
+services:
+  tflint:
+    image: ragedunicorn/tflint:${TFLINT_VERSION:-latest}
+    container_name: tflint-example
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /workspace
+    volumes:
+      # The code to lint. Read-only: TFLint does not modify your configuration.
+      - ./:/workspace:ro
+      # Persist plugins installed by `tflint --init` across runs. This must be
+      # writable, so it is mounted separately from the read-only workspace.
+      - tflint-plugin-cache:/home/tflint/.tflint.d/plugins
+    environment:
+      - TERM=xterm-256color
+      # Override the default plugin directory if you mount it elsewhere.
+      # - TFLINT_PLUGIN_DIR=/home/tflint/.tflint.d/plugins
+      # A GitHub token raises the API rate limit when `tflint --init` downloads
+      # plugins from GitHub releases:
+      # - GITHUB_TOKEN
+    tty: true
+    init: true
+
+volumes:
+  tflint-plugin-cache:

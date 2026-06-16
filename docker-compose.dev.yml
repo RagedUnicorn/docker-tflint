@@ -1,0 +1,29 @@
+# Docker Compose configuration for development
+#
+# This file is used for building and testing the TFLint image locally
+#
+# Usage:
+#   docker compose -f docker-compose.dev.yml build
+#   docker compose -f docker-compose.dev.yml run --rm tflint-dev
+#
+# This drops you into a shell where you can manually run tflint commands
+
+services:
+  tflint-dev:
+    build: .
+    image: ragedunicorn/tflint:dev
+    volumes:
+      - ./examples:/workspace
+      - ./test:/test:ro
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    # Override entrypoint to get a shell instead of the tflint binary
+    entrypoint: /bin/sh
+    labels:
+      org.opencontainers.image.title: "TFLint on Alpine Linux (Dev)"
+      org.opencontainers.image.description: "TFLint development environment for testing and debugging"
+      org.opencontainers.image.vendor: "ragedunicorn"
+    environment:
+      - TERM=xterm-256color
+      - PS1=\[\033[1;35m\]tflint-dev\[\033[0m\]:\w\$

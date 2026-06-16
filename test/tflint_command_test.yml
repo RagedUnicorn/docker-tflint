@@ -1,0 +1,53 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: 'TFLint version output'
+    command: 'tflint'
+    args: ['--version']
+    exitCode: 0
+    expectedOutput:
+      - 'TFLint version'
+
+  - name: 'TFLint help command'
+    command: 'tflint'
+    args: ['--help']
+    exitCode: 0
+    expectedOutput:
+      - 'Usage:'
+      - 'tflint'
+
+  - name: 'Working directory is set correctly'
+    command: 'pwd'
+    exitCode: 0
+    expectedOutput:
+      - '/workspace'
+
+  - name: 'Runs as non-root tflint user'
+    command: 'id'
+    args: ['-un']
+    exitCode: 0
+    expectedOutput:
+      - 'tflint'
+
+  - name: 'Lint a clean config exits zero'
+    # Includes a terraform{} required_version block to satisfy the
+    # default-enabled terraform_required_version rule.
+    setup: [
+      ['sh', '-c', 'mkdir -p /tmp/tfclean && printf "terraform {\n  required_version = \">= 1.0\"\n}\n\nvariable \"name\" {\n  type    = string\n  default = \"world\"\n}\n\noutput \"greeting\" {\n  value = var.name\n}\n" > /tmp/tfclean/main.tf']
+    ]
+    command: 'sh'
+    args: ['-c', 'cd /tmp/tfclean && tflint --no-color']
+    exitCode: 0
+
+  - name: 'Lint flags an issue with the bundled terraform ruleset'
+    # The "terraform" ruleset is bundled into tflint, so this runs fully offline
+    # (no `tflint --init`/network). An unused variable trips
+    # terraform_unused_declarations; tflint exits 2 when it reports issues.
+    setup: [
+      ['sh', '-c', 'mkdir -p /tmp/tfbad && printf "variable \"unused\" {\n  type = string\n}\n" > /tmp/tfbad/main.tf && printf "rule \"terraform_unused_declarations\" {\n  enabled = true\n}\n" > /tmp/tfbad/.tflint.hcl']
+    ]
+    command: 'sh'
+    args: ['-c', 'cd /tmp/tfbad && tflint --no-color']
+    exitCode: 2
+    expectedOutput:
+      - 'terraform_unused_declarations'
