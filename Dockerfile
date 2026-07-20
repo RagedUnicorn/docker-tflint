@@ -4,7 +4,7 @@
 FROM alpine:3.24.1 AS build
 
 # renovate: datasource=github-releases depName=terraform-linters/tflint
-ARG TFLINT_VERSION=0.63.1
+ARG TFLINT_VERSION=0.64.0
 # Provided automatically by buildx (linux/amd64 -> amd64, linux/arm64 -> arm64)
 ARG TARGETARCH
 
