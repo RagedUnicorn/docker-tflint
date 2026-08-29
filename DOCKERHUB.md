@@ -1,6 +1,6 @@
 # TFLint Alpine Docker Image
 
-![Docker TFLint](https://raw.githubusercontent.com/RagedUnicorn/docker-tflint/master/docs/docker_tflint.png)
+![Docker TFLint](https://raw.githubusercontent.com/RagedUnicorn/docker-tflint/master/docs/docker_tflint_banner.png)
 
 A lightweight [TFLint](https://github.com/terraform-linters/tflint) CLI built on
 Alpine Linux. The official TFLint release is cosign- and checksum-verified at
