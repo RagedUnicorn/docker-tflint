@@ -1,6 +1,6 @@
 # docker-tflint
 
-![](./docs/docker_tflint.png)
+![](./docs/docker_tflint_banner.svg)
 
 [![Release Build](https://github.com/RagedUnicorn/docker-tflint/actions/workflows/docker_release.yml/badge.svg)](https://github.com/RagedUnicorn/docker-tflint/actions/workflows/docker_release.yml)
 [![Test](https://github.com/RagedUnicorn/docker-tflint/actions/workflows/test.yml/badge.svg)](https://github.com/RagedUnicorn/docker-tflint/actions/workflows/test.yml)
