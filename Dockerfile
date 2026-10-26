@@ -1,10 +1,10 @@
 ############################################
 # Download + verify stage
 ############################################
-FROM alpine:3.24.2 AS build
+FROM alpine:3.24.3 AS build
 
 # renovate: datasource=github-releases depName=terraform-linters/tflint
-ARG TFLINT_VERSION=0.64.0
+ARG TFLINT_VERSION=0.65.0
 # Provided automatically by buildx (linux/amd64 -> amd64, linux/arm64 -> arm64)
 ARG TARGETARCH
 
@@ -54,7 +54,7 @@ RUN set -eux; \
 ############################################
 # Runtime stage
 ############################################
-FROM alpine:3.24.2
+FROM alpine:3.24.3
 
 ARG BUILD_DATE
 ARG VERSION
@@ -69,7 +69,7 @@ LABEL org.opencontainers.image.title="TFLint on Alpine Linux" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.base.name="docker.io/library/alpine:3.24.2"
+      org.opencontainers.image.base.name="docker.io/library/alpine:3.24.3"
 
 # Runtime dependencies:
 #   ca-certificates - HTTPS for `tflint --init` plugin downloads from the registry
