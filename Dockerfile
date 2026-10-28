@@ -79,10 +79,12 @@ RUN apk add --no-cache --update ca-certificates
 # Non-root user with a real home so `tflint --init` can write its plugin cache
 # under $HOME/.tflint.d/plugins. Pre-create the directory so a volume mounted
 # there inherits tflint's ownership instead of being created root-owned and
-# unwritable.
+# unwritable. The plugin directory is world-writable with the sticky bit (like
+# /tmp) so a `--user` UID other than tflint's can still use the cache.
 RUN adduser -D -h /home/tflint -s /sbin/nologin tflint && \
     mkdir -p /home/tflint/.tflint.d/plugins && \
-    chown -R tflint:tflint /home/tflint
+    chown -R tflint:tflint /home/tflint && \
+    chmod 1777 /home/tflint/.tflint.d/plugins
 
 COPY --from=build /out/tflint /usr/local/bin/tflint
 

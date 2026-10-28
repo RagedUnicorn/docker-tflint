@@ -11,6 +11,11 @@ fileExistenceTests:
     shouldExist: true
     permissions: 'drwxr-xr-x'
 
+  - name: 'Plugin cache directory writable by any UID'
+    path: '/home/tflint/.tflint.d/plugins'
+    shouldExist: true
+    permissions: 'dtrwxrwxrwx'
+
   - name: 'CA certificates for plugin-registry HTTPS'
     path: '/etc/ssl/certs/ca-certificates.crt'
     shouldExist: true

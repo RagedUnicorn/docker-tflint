@@ -27,8 +27,10 @@ services:
       - tflint-plugin-cache:/home/tflint/.tflint.d/plugins
     environment:
       - TERM=xterm-256color
-      # Override the default plugin directory if you mount it elsewhere.
-      # - TFLINT_PLUGIN_DIR=/home/tflint/.tflint.d/plugins
+      # Point TFLint at the mounted cache explicitly. The default
+      # (~/.tflint.d/plugins) depends on HOME, which resolves to / when the
+      # `user:` override is a UID without a passwd entry (anything but 1000).
+      - TFLINT_PLUGIN_DIR=/home/tflint/.tflint.d/plugins
       # A GitHub token raises the API rate limit when `tflint --init` downloads
       # plugins from GitHub releases:
       # - GITHUB_TOKEN
