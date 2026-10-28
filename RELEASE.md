@@ -36,7 +36,8 @@ When you push a tag, GitHub Actions automatically:
    - Publishes the full tag (`0.63.1-alpine3.22.1-1`), a bare TFLint version
      tag (`0.63.1`) and `latest`
 
-2. **Creates a GitHub Release** (`.github/workflows/github_release.yml`)
+2. **Creates a GitHub Release** (`create-release` job in `.github/workflows/docker_release.yml`)
+   - Runs only after the images were tested and pushed successfully
    - Generates a changelog from commit history
    - Adds Docker pull commands
    - Links to the release
