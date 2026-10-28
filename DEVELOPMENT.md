@@ -85,16 +85,16 @@ docker build -t ragedunicorn/tflint:dev .
 docker build \
   --build-arg TFLINT_VERSION=0.63.1 \
   --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
-  --build-arg VERSION=0.63.1-alpine3.22.1-1 \
-  -t ragedunicorn/tflint:0.63.1-alpine3.22.1-1 .
+  --build-arg VERSION=0.63.1-alpine3.24.1-1 \
+  -t ragedunicorn/tflint:0.63.1-alpine3.24.1-1 .
 
 # Multi-platform build (requires buildx). Do NOT set TARGETARCH by hand.
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --build-arg TFLINT_VERSION=0.63.1 \
-  --build-arg VERSION=0.63.1-alpine3.22.1-1 \
+  --build-arg VERSION=0.63.1-alpine3.24.1-1 \
   --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
-  -t ragedunicorn/tflint:0.63.1-alpine3.22.1-1 .
+  -t ragedunicorn/tflint:0.63.1-alpine3.24.1-1 .
 ```
 
 ### 3. Testing Your Changes

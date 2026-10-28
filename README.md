@@ -58,7 +58,7 @@ docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest [tflint-arg
 docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:0.63.1 [tflint-args]
 
 # Using an exact version combination
-docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:0.63.1-alpine3.22.1-1 [tflint-args]
+docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:0.63.1-alpine3.24.1-1 [tflint-args]
 ```
 
 ### Examples
@@ -185,7 +185,7 @@ This project uses versioning that matches the Docker image contents:
 **Format:** `{tflint_version}-alpine{alpine_version}-{build_number}`
 
 Examples:
-- `0.63.1-alpine3.22.1-1` - TFLint 0.63.1 on Alpine 3.22.1, build 1
+- `0.63.1-alpine3.24.1-1` - TFLint 0.63.1 on Alpine 3.24.1, build 1
 - `latest` - Most recent stable release
 
 The build number resets to `1` whenever TFLint is bumped, and is incremented

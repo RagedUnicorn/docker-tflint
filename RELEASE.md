@@ -6,9 +6,10 @@ project.
 ## Quick Start
 
 ```bash
-# Tag format: v{tflint_version}-alpine{alpine_version}-{build_number}
-git tag -a v0.63.1-alpine3.22.1-1 -m "v0.63.1-alpine3.22.1-1"
-git push origin v0.63.1-alpine3.22.1-1
+# Fill in the TFLint/Alpine versions from the Dockerfile and the next free build
+# number (see Version Tag Format below); an existing tag cannot be reused.
+git tag -a v{tflint_version}-alpine{alpine_version}-{build_number} -m "v{tflint_version}-alpine{alpine_version}-{build_number}"
+git push origin v{tflint_version}-alpine{alpine_version}-{build_number}
 ```
 
 This automatically triggers the release process via GitHub Actions.
@@ -20,10 +21,10 @@ See [README.md](README.md#versioning) for the complete versioning documentation.
 **Format:** `v{tflint_version}-alpine{alpine_version}-{build_number}`
 
 Examples:
-- `v0.63.1-alpine3.22.1-1` - Initial release
-- `v0.63.1-alpine3.22.1-2` - Rebuild with the same versions
-- `v0.63.1-alpine3.22.2-1` - Alpine patch update (build resets to 1)
-- `v0.64.0-alpine3.22.1-1` - TFLint update (build resets to 1)
+- `v0.63.1-alpine3.24.1-1` - First build of TFLint 0.63.1 on Alpine 3.24.1
+- `v0.63.1-alpine3.24.1-2` - Rebuild with the same versions
+- `v0.63.1-alpine3.24.2-1` - Alpine patch update (build resets to 1)
+- `v0.64.0-alpine3.24.1-1` - TFLint update (build resets to 1)
 
 ## Release Workflow
 
@@ -33,7 +34,7 @@ When you push a tag, GitHub Actions automatically:
    - Runs the full Container Structure Test suite first and fails fast if it breaks
    - Multi-platform: `linux/amd64` and `linux/arm64`
    - Pushes to both GitHub Container Registry and Docker Hub
-   - Publishes the full tag (`0.63.1-alpine3.22.1-1`), a bare TFLint version
+   - Publishes the full tag (`0.63.1-alpine3.24.1-1`), a bare TFLint version
      tag (`0.63.1`) and `latest`
 
 2. **Creates a GitHub Release** (`create-release` job in `.github/workflows/docker_release.yml`)
@@ -98,7 +99,7 @@ Before creating a release:
 
 ### Release didn't trigger
 
-- Ensure the tag starts with `v` and follows the format (e.g. `v0.63.1-alpine3.22.1-1`)
+- Ensure the tag starts with `v` and follows the format (e.g. `v0.63.1-alpine3.24.1-1`)
 - Check the GitHub Actions tab for workflow runs
 - Verify you have push permissions
 
@@ -132,10 +133,10 @@ If automation fails, create a release manually:
 
 1. Go to the repository's "Releases" page
 2. Click "Create a new release"
-3. Choose your tag (must follow the format: `v0.63.1-alpine3.22.1-1`)
+3. Choose your tag (must follow the format: `v0.63.1-alpine3.24.1-1`)
 4. Add release notes
 5. Include Docker pull commands:
    ```
-   docker pull ghcr.io/ragedunicorn/docker-tflint:0.63.1-alpine3.22.1-1
-   docker pull ragedunicorn/tflint:0.63.1-alpine3.22.1-1
+   docker pull ghcr.io/ragedunicorn/docker-tflint:0.63.1-alpine3.24.1-1
+   docker pull ragedunicorn/tflint:0.63.1-alpine3.24.1-1
    ```

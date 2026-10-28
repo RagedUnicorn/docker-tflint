@@ -14,7 +14,7 @@ its entrypoint.
 docker pull ragedunicorn/tflint:latest
 
 # Or pull a specific version
-docker pull ragedunicorn/tflint:0.63.1-alpine3.22.1-1
+docker pull ragedunicorn/tflint:0.63.1-alpine3.24.1-1
 
 # Show the version
 docker run --rm ragedunicorn/tflint:latest --version
@@ -82,10 +82,10 @@ This image uses versioning that includes all component versions:
 
 ### Version Examples
 
-- `0.63.1-alpine3.22.1-1` - Initial release with TFLint 0.63.1 and Alpine 3.22.1
-- `0.63.1-alpine3.22.1-2` - Rebuild of the same versions (base CVE patch, fixes)
-- `0.63.1-alpine3.22.2-1` - Alpine Linux patch update
-- `0.64.0-alpine3.22.1-1` - TFLint version update (build resets to 1)
+- `0.63.1-alpine3.24.1-1` - TFLint 0.63.1 on Alpine 3.24.1, first build
+- `0.63.1-alpine3.24.1-2` - Rebuild of the same versions (base CVE patch, fixes)
+- `0.63.1-alpine3.24.2-1` - Alpine Linux patch update
+- `0.64.0-alpine3.24.1-1` - TFLint version update (build resets to 1)
 
 ## License
 
