@@ -35,10 +35,12 @@ TFLint reports the unused variable and exits with a non-zero status (`2`):
 ```
 1 issue(s) found:
 
-Warning: variable "unused" is declared but not used (terraform_unused_declarations)
+Warning: [Fixable] variable "unused" is declared but not used (terraform_unused_declarations)
 
-  on main.tf line 21:
-  21: variable "unused" {
+  on main.tf line 22:
+  22: variable "unused" {
+
+Reference: https://github.com/terraform-linters/tflint-ruleset-terraform/blob/v0.15.0/docs/rules/terraform_unused_declarations.md
 ```
 
 A configuration with no findings exits `0` and prints nothing.

@@ -19,6 +19,9 @@ services:
     container_name: tflint-example
     user: "${UID:-1000}:${GID:-1000}"
     working_dir: /workspace
+    # The image defaults to `--help`; lint /workspace instead. Any args passed
+    # to `run` (e.g. `--init`) replace this.
+    command: ["--chdir=/workspace"]
     volumes:
       # The code to lint. Read-only: TFLint does not modify your configuration.
       - ./:/workspace:ro
