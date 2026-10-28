@@ -10,12 +10,12 @@ Structure Tests.
 docker build -t ragedunicorn/tflint:test .
 
 # Run all tests
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml run test-all
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml run test-all
 
 # Run individual test suites
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml up container-test          # File structure
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml up container-test-command  # Command execution
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml up container-test-metadata # Metadata
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml up container-test          # File structure
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml up container-test-command  # Command execution
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml up container-test-metadata # Metadata
 ```
 
 ## Test Structure
@@ -68,19 +68,19 @@ docker build -t ragedunicorn/tflint:test .
 **Linux/macOS:**
 
 ```bash
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml run test-all
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml run test-all
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-$env:TFLINT_VERSION="test"; docker compose -f docker-compose.test.yml run test-all
+$env:TFLINT_TEST_VERSION="test"; docker compose -f docker-compose.test.yml run test-all
 ```
 
 **Windows (Command Prompt):**
 
 ```cmd
-set TFLINT_VERSION=test && docker compose -f docker-compose.test.yml run test-all
+set TFLINT_TEST_VERSION=test && docker compose -f docker-compose.test.yml run test-all
 ```
 
 **Why local testing is important:**
@@ -96,21 +96,21 @@ set TFLINT_VERSION=test && docker compose -f docker-compose.test.yml run test-al
 
 ```bash
 # File structure tests
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml up container-test
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml up container-test
 
 # Command execution tests
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml up container-test-command
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml up container-test-command
 
 # Metadata tests
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml up container-test-metadata
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml up container-test-metadata
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-$env:TFLINT_VERSION="test"; docker compose -f docker-compose.test.yml up container-test
-$env:TFLINT_VERSION="test"; docker compose -f docker-compose.test.yml up container-test-command
-$env:TFLINT_VERSION="test"; docker compose -f docker-compose.test.yml up container-test-metadata
+$env:TFLINT_TEST_VERSION="test"; docker compose -f docker-compose.test.yml up container-test
+$env:TFLINT_TEST_VERSION="test"; docker compose -f docker-compose.test.yml up container-test-command
+$env:TFLINT_TEST_VERSION="test"; docker compose -f docker-compose.test.yml up container-test-metadata
 ```
 
 ## Troubleshooting Test Failures

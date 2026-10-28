@@ -110,19 +110,19 @@ docker build -t ragedunicorn/tflint:test .
 **Linux/macOS:**
 
 ```bash
-TFLINT_VERSION=test docker compose -f docker-compose.test.yml run test-all
+TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml run test-all
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-$env:TFLINT_VERSION="test"; docker compose -f docker-compose.test.yml run test-all
+$env:TFLINT_TEST_VERSION="test"; docker compose -f docker-compose.test.yml run test-all
 ```
 
 **Windows (Command Prompt):**
 
 ```cmd
-set TFLINT_VERSION=test && docker compose -f docker-compose.test.yml run test-all
+set TFLINT_TEST_VERSION=test && docker compose -f docker-compose.test.yml run test-all
 ```
 
 **Important:** Never test against remote images - they may have different labels
