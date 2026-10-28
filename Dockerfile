@@ -35,12 +35,13 @@ RUN set -eux; \
     curl -fsSLO "${base}/checksums.txt"; \
     curl -fsSLO "${base}/checksums.txt.keyless.sig"; \
     curl -fsSLO "${base}/checksums.txt.pem"; \
-    # Keyless verification: the certificate identity must be TFLint's release
-    # workflow and the OIDC issuer must be GitHub Actions' token service.
+    # Keyless verification: the certificate identity must be exactly TFLint's
+    # release workflow run for this version's tag, and the OIDC issuer must be
+    # GitHub Actions' token service.
     cosign verify-blob \
       --certificate checksums.txt.pem \
       --signature checksums.txt.keyless.sig \
-      --certificate-identity-regexp '^https://github.com/terraform-linters/tflint' \
+      --certificate-identity "https://github.com/terraform-linters/tflint/.github/workflows/release.yml@refs/tags/v${TFLINT_VERSION}" \
       --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
       checksums.txt; \
     # Reduce checksums.txt to just our file's line and assert it is non-empty,
