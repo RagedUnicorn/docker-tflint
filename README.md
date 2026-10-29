@@ -192,6 +192,21 @@ The build number resets to `1` whenever TFLint is bumped, and is incremented
 only for rebuilds that leave the TFLint version unchanged (an Alpine patch or
 base CVE fix). For the detailed release process, see [RELEASE.md](RELEASE.md).
 
+## Image Verification
+
+Released images are signed with [cosign](https://docs.sigstore.dev/) keyless signing and carry SBOM and provenance attestations.
+
+```bash
+# Verify the signature (works for both ghcr.io/ragedunicorn/docker-tflint and ragedunicorn/tflint)
+cosign verify ragedunicorn/tflint:latest \
+  --certificate-identity-regexp '^https://github.com/RagedUnicorn/docker-tflint/\.github/workflows/docker_release\.yml@refs/tags/v' \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+
+# Inspect the SBOM and provenance attestations
+docker buildx imagetools inspect ragedunicorn/tflint:latest --format '{{ json .SBOM }}'
+docker buildx imagetools inspect ragedunicorn/tflint:latest --format '{{ json .Provenance }}'
+```
+
 ## Automated Dependency Updates
 
 This project uses [Renovate](https://docs.renovatebot.com/) to automatically
