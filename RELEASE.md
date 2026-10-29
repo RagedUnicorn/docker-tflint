@@ -93,7 +93,10 @@ Before creating a release:
 1. Build the image locally with your version changes
 2. Run the full test suite (`TFLINT_TEST_VERSION=test docker compose -f docker-compose.test.yml run test-all`)
 3. Verify `tflint` lints a sample config and reports the expected findings
-4. Check that multi-platform builds work (especially arm64)
+
+The `linux/arm64` image needs no manual check: the release workflow builds it
+and smoke-tests it under QEMU (`tflint --version` plus an aarch64 binary check)
+before anything is pushed.
 
 ## Troubleshooting
 
