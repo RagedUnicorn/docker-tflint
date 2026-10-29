@@ -41,6 +41,18 @@ docker run --rm ragedunicorn/tflint:latest --version
 docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace
 ```
 
+On Windows, use the PowerShell form:
+
+```powershell
+# Lint Terraform code in the current directory
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace
+```
+
+Write `${PWD}` **with braces** and keep the colon (and the `:ro` suffix) inside
+the quotes - without braces PowerShell parses `$PWD:` as a scope-qualified
+variable (as in `$env:PATH`) and rejects the argument. See the
+[Windows (PowerShell) notes](#windows-powershell-notes) for details.
+
 For development and building from source, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Usage
@@ -61,6 +73,19 @@ docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:0.63.1 [tflint-arg
 docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:0.63.1-alpine3.24.1-1 [tflint-args]
 ```
 
+PowerShell:
+
+```powershell
+# Using latest version
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest [tflint-args]
+
+# Using a specific TFLint version
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:0.63.1 [tflint-args]
+
+# Using an exact version combination
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:0.63.1-alpine3.24.1-1 [tflint-args]
+```
+
 ### Examples
 
 ```bash
@@ -75,6 +100,22 @@ docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/wo
 
 # Lint recursively
 docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace --recursive
+```
+
+PowerShell:
+
+```powershell
+# Lint the working directory (bundled terraform ruleset, fully offline)
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace
+
+# Show the TFLint version
+docker run --rm ragedunicorn/tflint:latest --version
+
+# Output findings as JSON
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace --format=json
+
+# Lint recursively
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace --recursive
 ```
 
 TFLint exit codes: `0` = no issues, `2` = issues found, `1` = an application error.
@@ -93,6 +134,12 @@ configuration. You can safely mount `/workspace` read-only:
 docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace
 ```
 
+PowerShell:
+
+```powershell
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace
+```
+
 ### Installing external rulesets requires `tflint --init`
 
 The bundled **terraform** ruleset works offline. Cloud rulesets (AWS, Google
@@ -105,6 +152,15 @@ a writable plugin directory (`~/.tflint.d/plugins` by default, overridable with
 docker run --rm \
   -v "$(pwd)":/workspace \
   -v tflint-plugin-cache:/home/tflint/.tflint.d/plugins \
+  ragedunicorn/tflint:latest --chdir=/workspace --init
+```
+
+PowerShell:
+
+```powershell
+docker run --rm `
+  -v "${PWD}:/workspace" `
+  -v tflint-plugin-cache:/home/tflint/.tflint.d/plugins `
   ragedunicorn/tflint:latest --chdir=/workspace --init
 ```
 
@@ -121,11 +177,54 @@ docker run --rm --user "$(id -u):$(id -g)" \
   -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace
 ```
 
+**Windows hosts:** skip this section. Docker Desktop bind mounts do not carry
+Unix file ownership, so `--user` matching has no effect there (and `id` does
+not exist in PowerShell). Ownership matching applies to Linux and macOS hosts.
+
 In Docker Compose, match the host UID/GID:
 
 ```yaml
 user: "${UID:-1000}:${GID:-1000}"
 ```
+
+### Windows (PowerShell) notes
+
+The PowerShell variants above differ from the bash ones in two ways: the
+mount is written `-v "${PWD}:/workspace:ro"` instead of
+`-v "$(pwd)":/workspace:ro`, and the backtick replaces `\` as the
+line-continuation character.
+
+The mount spelling matters:
+
+- Pasting the bash form into PowerShell breaks: the argument ends at the
+  closing quote, so `"$(pwd)":/workspace:ro` reaches Docker as two arguments
+  (`C:\path` and `:/workspace:ro`).
+- `"$PWD:/workspace:ro"` without braces is a parse error: PowerShell reads a
+  colon after a variable as a scope qualifier (as in `$env:PATH`), and `/` is
+  not a valid variable-name character.
+- `"${PWD}:/workspace:ro"` works: the braces end the variable name at `PWD`,
+  the colons stay literal, and Docker splits the resulting
+  `C:\path:/workspace:ro` into host path, container path and the `ro` option
+  because it recognises the `C:` drive prefix. Drop `:ro` for a writable
+  mount.
+
+To check what the container actually sees under `/workspace`, run a
+look-inside command:
+
+```powershell
+docker run --rm -v "${PWD}:/workspace:ro" --entrypoint sh ragedunicorn/tflint:latest -c 'pwd; ls -la /workspace'
+```
+
+The single quotes keep `pwd; ls -la /workspace` as one literal argument to
+the container's `sh`, so the `;` runs inside the container - unquoted,
+PowerShell would treat `;` as its own statement separator and run
+`ls -la /workspace` on the host.
+
+For more complex invocations where PowerShell keeps mangling arguments, the
+[stop-parsing token `--%`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing#the-stop-parsing-token)
+is an escape hatch: PowerShell passes everything after it verbatim. Nothing
+after `--%` is expanded - including `${PWD}` - so it cannot be combined with
+the mount examples above; none of the examples in this README need it.
 
 ## Docker Compose Usage
 

@@ -23,6 +23,16 @@ docker run --rm ragedunicorn/tflint:latest --version
 docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace
 ```
 
+On Windows, use the PowerShell form - `${PWD}` **with braces** and the colon
+(and the `:ro` suffix) inside the quotes (without braces PowerShell parses
+`$PWD:` as a scope-qualified variable, as in `$env:PATH`, and rejects the
+argument):
+
+```powershell
+# Lint Terraform code in the current directory
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace
+```
+
 ## Features
 
 - 🪶 **Small footprint**: minimal Alpine-based runtime image
@@ -40,12 +50,27 @@ docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/wo
 docker run --rm -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace
 ```
 
+PowerShell:
+
+```powershell
+docker run --rm -v "${PWD}:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace
+```
+
 ### Install external rulesets (AWS, Google, Azure, …)
 
 ```bash
 docker run --rm \
   -v "$(pwd)":/workspace \
   -v tflint-plugin-cache:/home/tflint/.tflint.d/plugins \
+  ragedunicorn/tflint:latest --chdir=/workspace --init
+```
+
+PowerShell:
+
+```powershell
+docker run --rm `
+  -v "${PWD}:/workspace" `
+  -v tflint-plugin-cache:/home/tflint/.tflint.d/plugins `
   ragedunicorn/tflint:latest --chdir=/workspace --init
 ```
 
@@ -56,12 +81,23 @@ docker run --rm -v "$(pwd)":/workspace:ro \
   ragedunicorn/tflint:latest --chdir=/workspace --format=json
 ```
 
+PowerShell:
+
+```powershell
+docker run --rm -v "${PWD}:/workspace:ro" `
+  ragedunicorn/tflint:latest --chdir=/workspace --format=json
+```
+
 ### Match host user for bind-mount ownership
 
 ```bash
 docker run --rm --user "$(id -u):$(id -g)" \
   -v "$(pwd)":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace
 ```
+
+On Windows hosts this is not needed: Docker Desktop bind mounts do not carry
+Unix file ownership, so `--user` matching has no effect (and `id` does not
+exist in PowerShell).
 
 ## Runtime Notes
 

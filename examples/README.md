@@ -22,6 +22,14 @@ file that demonstrate linting with the image.
 docker run --rm -v "$(pwd)/examples":/workspace:ro ragedunicorn/tflint:latest --chdir=/workspace
 ```
 
+PowerShell:
+
+```powershell
+# From the repository root. Write ${PWD} with braces and keep the colons
+# inside the quotes.
+docker run --rm -v "${PWD}/examples:/workspace:ro" ragedunicorn/tflint:latest --chdir=/workspace
+```
+
 ### Using Docker Compose
 
 ```bash
@@ -68,7 +76,8 @@ docker compose -f examples/docker-compose.yml run --rm tflint
   files; mount `/workspace` read-only if you like.
 - **File ownership.** The image runs as the non-root `tflint` user. Match your
   host user with `--user "$(id -u):$(id -g)"` (docker run) or the `user:` field
-  (compose) so any written files stay owned by you.
+  (compose) so any written files stay owned by you. On Windows hosts this is
+  not needed: Docker Desktop bind mounts do not carry Unix file ownership.
 - **Plugin cache.** `tflint --init` downloads plugins into `~/.tflint.d/plugins`.
   Mount a volume there so they survive across runs.
 - **Exit codes.** `0` = no issues, `2` = issues found, `1` = an application error.
