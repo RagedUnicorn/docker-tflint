@@ -81,21 +81,28 @@ tflint --chdir=/workspace
 # Basic build (BuildKit supplies TARGETARCH automatically)
 docker build -t ragedunicorn/tflint:dev .
 
-# Build with version metadata
+# Build with version metadata (TFLint and Alpine come from the Dockerfile)
 docker build \
-  --build-arg TFLINT_VERSION=0.63.1 \
   --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
-  --build-arg VERSION=0.63.1-alpine3.24.1-1 \
-  -t ragedunicorn/tflint:0.63.1-alpine3.24.1-1 .
+  --build-arg VERSION=dev \
+  -t ragedunicorn/tflint:dev .
+
+# Build a different TFLint version than the Dockerfile default
+docker build \
+  --build-arg TFLINT_VERSION=<tflint-version> \
+  -t ragedunicorn/tflint:dev .
 
 # Multi-platform build (requires buildx). Do NOT set TARGETARCH by hand.
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
-  --build-arg TFLINT_VERSION=0.63.1 \
-  --build-arg VERSION=0.63.1-alpine3.24.1-1 \
+  --build-arg VERSION=dev \
   --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
-  -t ragedunicorn/tflint:0.63.1-alpine3.24.1-1 .
+  -t ragedunicorn/tflint:dev .
 ```
+
+The TFLint version is the `TFLINT_VERSION` default in the `Dockerfile` and the
+Alpine version is its `FROM` line. Renovate keeps both current, so the docs do
+not repeat them.
 
 ### 3. Testing Your Changes
 
