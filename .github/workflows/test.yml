@@ -112,6 +112,9 @@ jobs:
             echo ""
             echo "Testing that TFLint flags an issue with the bundled terraform ruleset..."
             tmp=$(mktemp -d)
+            # mktemp -d is 0700 and owned by the runner; the image runs as an
+            # unprivileged user that must be able to read the mounted module
+            chmod 755 "$tmp"
             printf 'variable "unused" {\n  type = string\n}\n' > "$tmp/main.tf"
             printf 'rule "terraform_unused_declarations" {\n  enabled = true\n}\n' > "$tmp/.tflint.hcl"
             set +e
